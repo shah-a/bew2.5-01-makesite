@@ -28,3 +28,6 @@
 # Binaries
 makesite
 solution.go
+
+# .DS_Store
+.DS_Store
