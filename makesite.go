@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+)
 
 func main() {
-	fmt.Println("Salaam, world!")
+	content, err := ioutil.ReadFile("first-post.txt")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s", content)
 }
