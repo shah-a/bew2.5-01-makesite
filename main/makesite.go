@@ -1,10 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"html/template"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 type Data struct {
@@ -12,13 +14,24 @@ type Data struct {
 }
 
 func main() {
-	text, err := ioutil.ReadFile("first-post.txt")
+	var file string
+	flag.StringVar(&file, "file", "", "filename to parse")
+	flag.StringVar(&file, "f", "", "filename to parse")
+	flag.Parse()
+
+	if file == "" {
+		panic("\"--file\" (or \"-f\") flag required")
+	}
+
+	file = strings.TrimSuffix(file, ".txt") // remove ".txt" extension from filename string
+
+	text, err := ioutil.ReadFile(file + ".txt")
 	if err != nil {
 		panic(err)
 	}
 	context := Data{string(text)}
 
-	path, err := os.Create("first-post.html")
+	path, err := os.Create(file + ".html")
 	if err != nil {
 		panic(err)
 	}
@@ -29,5 +42,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("Successfully generated \"first-post.html\"!")
+	fmt.Printf("Successfully generated \"%s.html\"!\n", file)
 }
