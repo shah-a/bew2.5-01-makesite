@@ -41,7 +41,7 @@ func parseFlags() (string, string, error) {
 func appendFilePath(file string, paths *[]string) {
 	ext := filepath.Ext(file)
 	if ext != ".txt" {
-		panic("File must be \".txt\"")
+		panic(red("File must be ") + boldRed("\".txt\""))
 	}
 
 	// removes ".txt" extension from `file` string, then appends to `*paths`
@@ -53,7 +53,7 @@ func appendFilePath(file string, paths *[]string) {
 func appendDirPaths(dir string, pathsPtr *[]string) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
-		panic(err)
+		panic(red(err))
 	}
 
 	for _, file := range files {
@@ -70,20 +70,21 @@ func appendDirPaths(dir string, pathsPtr *[]string) {
 func generateHTML(path string) {
 	text, err := ioutil.ReadFile(path + ".txt")
 	if err != nil {
-		panic(err)
+		panic(red(err))
 	}
 	context := Data{string(text)}
 
 	htmlPath, err := os.Create(path + ".html")
 	if err != nil {
-		panic(err)
+		panic(red(err))
 	}
 
 	t := template.Must(template.New("template.tmpl").ParseFiles("template.tmpl"))
 	err = t.Execute(htmlPath, context)
 	if err != nil {
-		panic(err)
+		panic(red(err))
 	}
 
-	fmt.Printf("Successfully generated \"%s.html\"!\n", path)
+	successMsg := green("Successfully generated ") + boldGreen("\"%s.html\"\n")
+	fmt.Printf(successMsg, path)
 }
